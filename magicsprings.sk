@@ -1,0 +1,240 @@
+#---------------------------------------------------------------#
+#                       skrypt by herhor67                      #
+#---------------------------------------------------------------#
+#                          licencja:                            #
+#            Zakaz podszywania sie pod autora skryptu           #
+#            Zakaz kopiowania wiekszych czesci kodu             #
+#---------------------------------------------------------------#
+#                           inne info:                          #
+#                    rekriłed plagins: SK+                      #
+#---------------------------------------------------------------#
+#                          uprawnienia:                         #
+#      - zrodelka.tworzenie - pozwala tworzyc nowe zrodelka     #
+#  - zrodelka.leczenie - pozwala dodatkowo leczyc sie komenda   #
+#                 - zrodelka.* - wszystkie w.w.                 #
+#---------------------------------------------------------------#
+#          poczatek opcji - tu ustawiasz efekty i bloki         #
+#---------------------------------------------------------------#
+options:
+	zlyefekt1: slowness
+	zlyefekt2: weakness
+	zlyefekt3: poison
+	zlyefekt4: blindness
+	dobryefekt1: strength
+	dobryefekt2: fire resistance
+	dobryefekt3: regeneration
+	dobryefekt4: night vision
+	blok1: lapis lazuli block
+	blok2: gold block
+	blok3: redstone block
+	blok4: emerald block
+	blok5: soul sand
+	blok6: iron block
+	blok7: diamond block
+	blok8: coal block
+	nazwamikstury: &1Magiczna Mikstura
+#---------------------------------------------------------------#
+#send "Koniec grzebania w kodzie :)" to player reading this text#
+#---------------------------------------------------------------#
+#         a myslalem ze sie uda bez variables :-)               #
+#---------------------------------------------------------------#
+variables:
+	{dobryefekt1.%player%} = false
+	{dobryefekt2.%player%} = false
+	{dobryefekt3.%player%} = false
+	{dobryefekt4.%player%} = false
+	{zlyefekt1.%player%} = false
+	{zlyefekt2.%player%} = false
+	{zlyefekt3.%player%} = false
+	{zlyefekt4.%player%} = false
+#---------------------------------------------------------------#
+#                tworzenie butelki i jej uzycie:                #
+#---------------------------------------------------------------#
+ 
+on script load:
+	register new shaped recipe for water bottle named "{@nazwamikstury}" using none, glass, none, glass, lava bucket, glass, none, glass, none
+ 
+on rightclick with water bottle:
+	name of player's tool is "{@nazwamikstury}":
+		cancel event
+		remove 1 water bottle named "{@nazwamikstury}" from player's inventory
+		send "&2Oczysciles sie z negatywnych efektow"
+		loop 7 times:
+			execute server command "/playsound random.drink %player%"
+			wait 4 ticks
+		wait 1 second
+		execute server command "/playsound random.burp %player%"
+		apply nausea to player for 2 seconds
+		remove {@zlyefekt1} from player
+		remove {@zlyefekt2} from player
+		remove {@zlyefekt3} from player
+		remove {@zlyefekt4} from player
+		set {zlyefekt1.%player%} to false
+		set {zlyefekt2.%player%} to false
+		set {zlyefekt3.%player%} to false
+		set {zlyefekt4.%player%} to false
+
+#----------------------------------------------#
+#               jedyna komenda:                #
+#----------------------------------------------#
+
+command /zrodelka [<text>]:
+	trigger:
+		arg 1 is not set:
+			send "&6------------[ Magiczne Zrodelka ]------------"
+			send "&c/zrodelka ulecz - &6czysci negatywne efekty"
+			send "&c/zrodelka autor - &6pokazuje autora skryptu"
+		arg 1 is "pomoc" or "help":
+			execute player command "/zrodelka"
+		arg 1 is "autor":
+			send "&6------------[ Magiczne Zrodelka ]------------"
+			send "&6Autorem skryptu jest herhor67"
+			send "&cherhor67.tk"
+		arg 1 is "ulecz":
+			if has permission "zrodelka.leczenie" or "zrodelka.*":
+				loop 7 times:
+					execute server command "/playsound random.drink %player%"
+					wait 4 ticks
+				wait 1 second
+				execute server command "/playsound random.burp %player%"
+				apply nausea to player for 2 seconds
+				send "&2Oczysciles sie z negatywnych efektow"
+				remove {@zlyefekt1} from player
+				remove {@zlyefekt2} from player
+				remove {@zlyefekt3} from player
+				remove {@zlyefekt4} from player
+				set {zlyefekt1.%player%} to false
+				set {zlyefekt2.%player%} to false
+				set {zlyefekt3.%player%} to false
+				set {zlyefekt4.%player%} to false
+		arg 1 is "odswiez":
+			if has permission "zrodelka.odswiezanie" or "zrodelka.*":
+				execute server command "/sk reload %script%"
+
+#----------------------------------------------#
+#              nadawanie efektow               #
+#----------------------------------------------#
+
+every 5 seconds:
+	loop all players:
+		block 0 north loop-player is water:
+			block 1 north loop-player is {@blok1}:
+				block 1 south loop-player is {@blok1}:
+					block 1 east loop-player is {@blok1}:
+						block 1 west loop-player is {@blok1}:
+							block 1 north 1 west loop-player is {@blok1}:
+								block 1 north 1 east loop-player is {@blok1}:
+									block 1 south 1 east loop-player is {@blok1}:
+										block 1 south 1 west loop-player is {@blok1}:
+											{dobryefekt1.%loop-player%} is false:
+												set {dobryefekt1.%loop-player%} to true
+												send "&2Otrzymales efekt {@dobryefekt1} na 2 minuty" to loop-player
+												apply {@dobryefekt1} to loop-player for 2 minutes
+												wait 2 minutes
+												send "&6Twoj efekt &c{@dobryefekt1} &6sie skonczyl" to loop-player
+												set {dobryefekt1.%loop-player%} to false
+			block 1 north loop-player is {@blok2}:
+				block 1 south loop-player is {@blok2}:
+					block 1 east loop-player is {@blok2}:
+						block 1 west loop-player is {@blok2}:
+							block 1 north 1 west loop-player is {@blok2}:
+								block 1 north 1 east loop-player is {@blok2}:
+									block 1 south 1 east loop-player is {@blok2}:
+										block 1 south 1 west loop-player is {@blok2}:
+											{dobryefekt2.%loop-player%} is false:
+												set {dobryefekt2.%loop-player%} to true
+												send "&2Otrzymales efekt {@dobryefekt2} na 2 minuty" to loop-player
+												apply {@dobryefekt2} to loop-player for 2 minutes
+												wait 2 minutes
+												send "&6Twoj efekt &c{@dobryefekt2} &6sie skonczyl" to loop-player
+												set {dobryefekt2.%loop-player%} to false
+			block 1 north loop-player is {@blok3}:
+				block 1 south loop-player is {@blok3}:
+					block 1 east loop-player is {@blok3}:
+						block 1 west loop-player is {@blok3}:
+							block 1 north 1 west loop-player is {@blok3}:
+								block 1 north 1 east loop-player is {@blok3}:
+									block 1 south 1 east loop-player is {@blok3}:
+										block 1 south 1 west loop-player is {@blok3}:
+											{dobryefekt3.%loop-player%} is false:
+												set {dobryefekt3.%loop-player%} to true
+												send "&2Otrzymales efekt {@dobryefekt3} na 2 minuty" to loop-player
+												apply {@dobryefekt3} to loop-player for 2 minutes
+												wait 2 minutes
+												send "&6Twoj efekt &c{@dobryefekt3} &6sie skonczyl" to loop-player
+												set {dobryefekt3.%loop-player%} to false
+			block 1 north loop-player is {@blok4}:
+				block 1 south loop-player is {@blok4}:
+					block 1 east loop-player is {@blok4}:
+						block 1 west loop-player is {@blok4}:
+							block 1 north 1 west loop-player is {@blok4}:
+								block 1 north 1 east loop-player is {@blok4}:
+									block 1 south 1 east loop-player is {@blok4}:
+										block 1 south 1 west loop-player is {@blok4}:
+											{dobryefekt4.%loop-player%} is false:
+												set {dobryefekt4.%loop-player%} to true
+												send "&2Otrzymales efekt {@dobryefekt4} na 2 minuty" to loop-player
+												apply {@dobryefekt4} to loop-player for 2 minutes
+												wait 2 minutes
+												send "&6Twoj efekt &c{@dobryefekt4} &6sie skonczyl" to loop-player
+												set {dobryefekt4.%loop-player%} to false
+			block 1 north loop-player is {@blok5}:
+				block 1 south loop-player is {@blok5}:
+					block 1 east loop-player is {@blok5}:
+						block 1 west loop-player is {@blok5}:
+							block 1 north 1 west loop-player is {@blok5}:
+								block 1 north 1 east loop-player is {@blok5}:
+									block 1 south 1 east loop-player is {@blok5}:
+										block 1 south 1 west loop-player is {@blok5}:
+											{zlyefekt1.%loop-player%} is false:
+												set {zlyefekt1.%loop-player%} to true
+												send "&2Otrzymales efekt {@zlyefekt1} na 2 minuty" to loop-player
+												apply {@zlyefekt1} to loop-player for 2 minutes
+												wait 2 minutes
+												send "&6Twoj efekt &c{@zlyefekt1} &6sie skonczyl" to loop-player
+												set {zlyefekt1.%loop-player%} to false
+			block 1 north loop-player is {@blok6}:
+				block 1 south loop-player is {@blok6}:
+					block 1 east loop-player is {@blok6}:
+						block 1 west loop-player is {@blok6}:
+							block 1 north 1 west loop-player is {@blok6}:
+								block 1 north 1 east loop-player is {@blok6}:
+									block 1 south 1 east loop-player is {@blok6}:
+										block 1 south 1 west loop-player is {@blok6}:
+											{zlyefekt2.%loop-player%} is false:
+												set {zlyefekt2.%loop-player%} to true
+												send "&2Otrzymales efekt {@zlyefekt2} na 2 minuty" to loop-player
+												apply {@zlyefekt2} to loop-player for 2 minutes
+												wait 2 minutes
+												send "&6Twoj efekt &c{@zlyefekt2} &6sie skonczyl" to loop-player
+												set {zlyefekt2.%loop-player%} to false
+			block 1 north loop-player is {@blok7}:
+				block 1 south loop-player is {@blok7}:
+					block 1 east loop-player is {@blok7}:
+						block 1 west loop-player is {@blok7}:
+							block 1 north 1 west loop-player is {@blok7}:
+								block 1 north 1 east loop-player is {@blok7}:
+									block 1 south 1 east loop-player is {@blok7}:
+										block 1 south 1 west loop-player is {@blok7}:
+											{zlyefekt3.%loop-player%} is false:
+												set {zlyefekt3.%loop-player%} to true
+												send "&2Otrzymales efekt {@zlyefekt3} na 2 minuty" to loop-player
+												apply {@zlyefekt3} to loop-player for 2 minutes
+												wait 2 minutes
+												send "&6Twoj efekt &c{@zlyefekt3} &6sie skonczyl" to loop-player
+												set {zlyefekt3.%loop-player%} to false
+			block 1 north loop-player is {@blok8}:
+				block 1 south loop-player is {@blok8}:
+					block 1 east loop-player is {@blok8}:
+						block 1 west loop-player is {@blok8}:
+							block 1 north 1 west loop-player is {@blok8}:
+								block 1 north 1 east loop-player is {@blok8}:
+									block 1 south 1 east loop-player is {@blok8}:
+										block 1 south 1 west loop-player is {@blok8}:
+											{zlyefekt4.%loop-player%} is false:
+												set {zlyefekt4.%loop-player%} to true
+												send "&2Otrzymales efekt {@zlyefekt4} na 2 minuty" to loop-player
+												apply {@zlyefekt4} to loop-player for 2 minutes
+												wait 2 minutes
+												send "&6Twoj efekt &c{@zlyefekt4} &6sie skonczyl" to loop-player
+												set {zlyefekt4.%loop-player%} to false
